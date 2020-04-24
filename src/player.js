@@ -1,17 +1,17 @@
 export default class Player {
-  constructor(gameWidth, gameHeight) {
+  constructor(game) {
     this.width = 50;
     this.height = 50;
 
-    this.gameWidth = gameWidth;
-    this.gameHeight = gameHeight;
+    this.gameWidth = game.gameWidth;
+    this.gameHeight = game.gameHeight;
     
     this.maxSpeed = 5;
     this.speed = 0;
 
     this.position = {
-      x: gameWidth / 2 - this.width / 2,
-      y: gameHeight - this.height,
+      x: game.gameWidth / 2 - this.width / 2,
+      y: game.gameHeight - this.height - 10,
     }
 
   }

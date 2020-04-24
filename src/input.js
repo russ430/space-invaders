@@ -1,5 +1,5 @@
 export default class ButtonPress {
-  constructor(player) {
+  constructor({ player }) {
     document.addEventListener("keydown", event => {
       switch(event.keyCode) {
         case 37:
@@ -8,8 +8,8 @@ export default class ButtonPress {
         case 39:
           player.moveRight();
           break;
-        case 38:
-          player.jump();
+        case 32:
+          player.shoot();
           break;
       }
     })
