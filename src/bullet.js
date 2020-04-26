@@ -1,19 +1,23 @@
 export default class Bullet {
-  constructor(gameWidth, gameHeight) {
+  constructor(game) {
     this.width = 5;
     this.height = 20;
 
-    this.gameWidth = gameWidth;
-    this.gameHeight = gameHeight;
+    this.speed = 0;
+    this.maxSpeed = 8;
 
     this.position = {
-      x: this.gameWidth / 2 - this.width / 2,
-      y: this.gameHeight / 2,
+      x: game.player.position.x + game.player.width / 2,
+      y: game.player.position.y,
     }
   }
 
   draw(ctx) {
     ctx.fillStyle = "#000";
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
+
+  update(deltaTime) {
+    this.position.y += -this.maxSpeed;
   }
 }
