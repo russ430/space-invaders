@@ -1,8 +1,8 @@
-export function detectHit(bullet, enemy) {
+export function detectHit(object, enemy) {
   if (
-    enemy.position.y + enemy.height >= bullet.position.y &&
-    bullet.position.x >= enemy.position.x &&
-    bullet.position.x <= enemy.position.x + enemy.width
+    enemy.position.y + enemy.height >= object.position.y &&
+    object.position.x >= enemy.position.x &&
+    object.position.x <= enemy.position.x + enemy.width
   ) {
     return true;
   }

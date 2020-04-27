@@ -4,7 +4,7 @@ export default class Bullet {
     this.height = 20;
 
     this.speed = 0;
-    this.maxSpeed = 8;
+    this.maxSpeed = 15;
 
     this.position = {
       x: game.player.position.x + game.player.width / 2,

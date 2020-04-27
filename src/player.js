@@ -32,9 +32,7 @@ export default class Player {
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
-  update(deltaTime) {
-    if (!deltaTime) return;
-
+  update() {
     this.position.x += this.speed;
 
     if (this.position.x < 0) this.position.x = 0;

@@ -45,7 +45,7 @@ export default class Game {
     this.start();
   }
 
-  update(deltaTime) {
+  update() {
     if (
       this.gameState === GAMESTATE.PAUSED ||
       this.gameState === GAMESTATE.MENU ||
@@ -53,20 +53,28 @@ export default class Game {
     )
       return;
 
-    this.gameObjects.forEach(object => object.update(deltaTime));
-    this.enemies.forEach(enemy => enemy.update(deltaTime));
-    if (this.bullet) {
-      for (let i = 0; i < this.enemies.length; i++) {
-        if (detectHit(this.bullet, this.enemies[i])) {
-          this.enemies[i].hits += 1;
+    this.gameObjects.forEach(object => object.update());
+    this.enemies.forEach(enemy => enemy.update());
+
+    // checking if the bullet has hit an enemy or
+    // if any enemies have reached the player
+    for (let i = 0; i < this.enemies.length; i++) {
+      const curEnemy = this.enemies[i];
+      if (this.bullet) {
+        if (detectHit(this.bullet, curEnemy)) {
+          curEnemy.hits += 1;
           this.bullet.hit = true;
           this.score += 10;
         }
+        this.enemies = this.enemies.filter(enemy => enemy.hits <= 1);
+        if (this.bullet.position.y < 0 || this.bullet.hit) this.bullet = null;
       }
-      this.enemies = this.enemies.filter(enemy => enemy.hits <= 1);
-      this.bullet.update(deltaTime);
-      if (this.bullet.position.y < 0 || this.bullet.hit) this.bullet = null;
+      if (curEnemy.position.y + curEnemy.height >= this.player.position.y) {
+        this.gameState = GAMESTATE.GAMEOVER;
+      }
     }
+
+    if (this.bullet) this.bullet.update();
     if (this.enemies.length < 1) this.win();
   }
 
@@ -98,6 +106,17 @@ export default class Game {
         this.gameWidth / 2,
         this.gameHeight / 2
       );
+    }
+
+    if (this.gameState === GAMESTATE.GAMEOVER) {
+      ctx.rect(0, 0, this.gameWidth, this.gameHeight);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+      ctx.fill();
+
+      ctx.font = '30px Arial';
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.fillText('GAME OVER', this.gameWidth / 2, this.gameHeight / 2);
     }
 
     ctx.font = '30px Arial';
