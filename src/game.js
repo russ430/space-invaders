@@ -3,7 +3,6 @@
 import Player from './player';
 import ButtonPress from './input';
 import Bullet from './bullet';
-import Enemy from './enemy';
 import { detectHit } from './detectHit';
 import { buildLevel } from './buildLevel';
 
@@ -19,20 +18,20 @@ export default class Game {
   constructor(gameWidth, gameHeight) {
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
-    this.gameState = GAMESTATE.RUNNING;
+    this.gameState = GAMESTATE.MENU;
     this.gameObjects = [];
-    this.bullets = [];
     this.enemies = [];
+    this.player = new Player(this);
 
     this.score = 0;
-    this.level = 1;
+    this.level = 0;
+    new ButtonPress(this);
   }
 
   start() {
     this.enemies = buildLevel(this, this.level);
-    this.player = new Player(this);
-    this.gameObjects.push(this.player);
-    new ButtonPress(this);
+    this.gameObjects = [this.player];
+    this.gameState = GAMESTATE.RUNNING;
   }
 
   shoot() {
@@ -73,6 +72,7 @@ export default class Game {
 
   draw(ctx) {
     [...this.gameObjects, ...this.enemies].forEach(object => object.draw(ctx));
+    if (this.bullet) this.bullet.draw(ctx);
 
     if (this.gameState === GAMESTATE.PAUSED) {
       ctx.rect(0, 0, this.gameWidth, this.gameHeight);
@@ -85,11 +85,24 @@ export default class Game {
       ctx.fillText('Paused', this.gameWidth / 2, this.gameHeight / 2);
     }
 
-    if (this.bullet) this.bullet.draw(ctx);
+    if (this.gameState === GAMESTATE.MENU) {
+      ctx.rect(0, 0, this.gameWidth, this.gameHeight);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+      ctx.fill();
+
+      ctx.font = '30px Arial';
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.fillText(
+        'Press ENTER to start',
+        this.gameWidth / 2,
+        this.gameHeight / 2
+      );
+    }
 
     ctx.font = '30px Arial';
     ctx.fillStyle = '#000';
-    ctx.fillText(`Score: ${this.score}`, 20, 50);
+    ctx.fillText(`Score: ${this.score}`, this.gameWidth / 2, 50);
   }
 
   togglePause() {
