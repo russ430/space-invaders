@@ -14,9 +14,6 @@ export default class Enemy {
   draw(ctx) {
     ctx.fillStyle = '#87BFE3';
     if (this.hits > 0) {
-      ctx.fillStyle = '#1A1E34';
-    }
-    if (this.hits > 1) {
       ctx.fillStyle = '#C80000';
     }
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);

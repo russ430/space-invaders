@@ -5,6 +5,7 @@ import ButtonPress from './input';
 import Bullet from './bullet';
 import Enemy from './enemy';
 import { detectHit } from './detectHit';
+import { buildLevel } from './buildLevel';
 
 const GAMESTATE = {
   PAUSED: 0,
@@ -24,14 +25,11 @@ export default class Game {
     this.enemies = [];
 
     this.score = 0;
-    this.level = 0;
+    this.level = 1;
   }
 
   start() {
-    for (let i = 0; i < 3; i++) {
-      const enemy = new Enemy(i * 50, 300);
-      this.enemies.push(enemy);
-    }
+    this.enemies = buildLevel(this, this.level);
     this.player = new Player(this);
     this.gameObjects.push(this.player);
     new ButtonPress(this);
@@ -43,8 +41,9 @@ export default class Game {
   }
 
   win() {
+    this.level += 1;
     this.gameState = GAMESTATE.NEWLEVEL;
-    console.log('win');
+    this.start();
   }
 
   update(deltaTime) {
@@ -65,7 +64,7 @@ export default class Game {
           this.score += 10;
         }
       }
-      this.enemies = this.enemies.filter(enemy => enemy.hits <= 2);
+      this.enemies = this.enemies.filter(enemy => enemy.hits <= 1);
       this.bullet.update(deltaTime);
       if (this.bullet.position.y < 0 || this.bullet.hit) this.bullet = null;
     }
