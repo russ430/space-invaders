@@ -5,15 +5,14 @@ export default class Player {
 
     this.gameWidth = game.gameWidth;
     this.gameHeight = game.gameHeight;
-    
+
     this.maxSpeed = 5;
     this.speed = 0;
 
     this.position = {
       x: game.gameWidth / 2 - this.width / 2,
       y: game.gameHeight - this.height - 10,
-    }
-
+    };
   }
 
   moveLeft() {
@@ -29,7 +28,7 @@ export default class Player {
   }
 
   draw(ctx) {
-    ctx.fillStyle = "#03e";
+    ctx.fillStyle = '#03e';
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
@@ -39,6 +38,7 @@ export default class Player {
     this.position.x += this.speed;
 
     if (this.position.x < 0) this.position.x = 0;
-    if (this.position.x > this.gameWidth - this.width) this.position.x = this.gameWidth - this.width;
+    if (this.position.x > this.gameWidth - this.width)
+      this.position.x = this.gameWidth - this.width;
   }
 }

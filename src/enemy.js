@@ -4,19 +4,17 @@ export default class Enemy {
     this.height = 30;
 
     this.position = {
-      x: x,
-      y: y,
-    }
+      x,
+      y,
+    };
 
     this.hit = false;
   }
 
   draw(ctx) {
-    ctx.fillStyle = "#f00";
+    ctx.fillStyle = '#f00';
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
-  update() {
-    return;
-  }
+  update() {}
 }
