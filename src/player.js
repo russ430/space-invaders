@@ -28,7 +28,7 @@ export default class Player {
   }
 
   draw(ctx) {
-    ctx.fillStyle = '#03e';
+    ctx.fillStyle = '#2074E2';
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 

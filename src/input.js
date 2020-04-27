@@ -11,6 +11,9 @@ export default class ButtonPress {
         case 32:
           game.shoot();
           break;
+        case 27:
+          game.togglePause();
+          break;
         default:
       }
     });
