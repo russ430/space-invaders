@@ -10,13 +10,15 @@ export default class Bullet {
       x: game.player.position.x + game.player.width / 2,
       y: game.player.position.y,
     }
+
+    this.hit = false;
   }
 
   draw(ctx) {
     ctx.fillStyle = "#000";
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
-
+  
   update(deltaTime) {
     this.position.y += -this.maxSpeed;
   }
