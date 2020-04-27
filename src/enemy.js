@@ -1,9 +1,9 @@
 export default class Enemy {
-  constructor(x, y) {
+  constructor(x, y, threshold) {
     this.width = 30;
     this.height = 30;
     this.movementCounter = 0;
-    this.moveDirection = 5;
+    this.movementThreshold = threshold;
     this.previous = 1;
 
     this.position = {
@@ -24,10 +24,10 @@ export default class Enemy {
 
   update() {
     this.movementCounter += 1;
-    if (this.movementCounter === 190) {
+    if (this.movementCounter === this.movementThreshold - 10) {
       this.position.y += 20;
     }
-    if (this.movementCounter === 200) {
+    if (this.movementCounter === this.movementThreshold) {
       this.position.x += 20 * this.previous;
       this.previous *= -1;
       this.movementCounter = 0;
