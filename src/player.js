@@ -1,7 +1,8 @@
 export default class Player {
   constructor(game) {
-    this.width = 50;
-    this.height = 50;
+    this.image = document.getElementById('ship');
+    this.width = 40;
+    this.height = 25;
 
     this.gameWidth = game.gameWidth;
     this.gameHeight = game.gameHeight;
@@ -28,8 +29,13 @@ export default class Player {
   }
 
   draw(ctx) {
-    ctx.fillStyle = '#2074E2';
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    ctx.drawImage(
+      this.image,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
   }
 
   update() {

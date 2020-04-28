@@ -1,36 +1,45 @@
 export default class Enemy {
-  constructor(x, y, threshold) {
-    this.width = 30;
-    this.height = 30;
+  constructor(x, y, stepSpeed) {
+    this.imageA = document.getElementById('enemy1a');
+    this.imageB = document.getElementById('enemy1b');
+    this.width = 25;
+    this.height = 25;
     this.movementCounter = 0;
-    this.movementThreshold = threshold;
-    this.previous = 1;
+    this.stepSpeed = stepSpeed;
+    this.direction = 1;
+    this.movement = 1;
+    this.step = 1;
 
     this.position = {
       x,
       y,
     };
 
-    this.hits = 0;
+    this.markedForDeletion = false;
   }
 
   draw(ctx) {
-    ctx.fillStyle = '#555';
-    if (this.hits > 0) {
-      ctx.fillStyle = '#C80000';
-    }
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    ctx.drawImage(
+      this.step < 0 ? this.imageA : this.imageB,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+  }
+
+  shiftDown() {
+    this.direction *= -1;
+    this.position.y += 20;
+    this.position.x += 10 * this.direction;
   }
 
   update() {
     this.movementCounter += 1;
-    if (this.movementCounter === this.movementThreshold - 10) {
-      this.position.y += 20;
-    }
-    if (this.movementCounter === this.movementThreshold) {
-      this.position.x += 20 * this.previous;
-      this.previous *= -1;
+    if (this.movementCounter === this.stepSpeed) {
+      this.position.x += 10 * this.direction;
       this.movementCounter = 0;
+      this.step *= -1;
     }
   }
 }

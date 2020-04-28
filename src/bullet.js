@@ -1,7 +1,7 @@
 export default class Bullet {
   constructor(game) {
-    this.width = 5;
-    this.height = 20;
+    this.width = 3;
+    this.height = 12;
 
     this.speed = 0;
     this.maxSpeed = 15;
@@ -15,7 +15,7 @@ export default class Bullet {
   }
 
   draw(ctx) {
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = '#fff';
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
