@@ -9,6 +9,8 @@ export default class Bomb {
       x,
       y,
     };
+
+    this.markedForDeletion = false;
   }
 
   draw(ctx) {

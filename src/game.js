@@ -35,6 +35,7 @@ export default class Game {
   }
 
   start() {
+    this.lives = 3;
     this.deltaTime = 0;
     this.enemies = buildLevel(this, this.level);
     this.gameObjects = [this.player];
@@ -97,6 +98,7 @@ export default class Game {
     for (let i = 0; i < this.bombs.length; i++) {
       const curBomb = this.bombs[i];
       if (detectBombHit(this.player, curBomb)) {
+        this.bombs.splice(i, 1);
         this.lives -= 1;
       }
     }
