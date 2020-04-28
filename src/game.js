@@ -3,9 +3,8 @@
 import Player from './player';
 import ButtonPress from './input';
 import Bullet from './bullet';
-import { detectHit } from './detectHit';
+import { detectBulletHit, detectBombHit, detectEdge } from './detections';
 import { buildLevel } from './buildLevel';
-import detectEdge from './detectEdge';
 import { levels } from './levels';
 import Bomb from './bomb';
 
@@ -30,6 +29,7 @@ export default class Game {
     this.deltaTime = 0;
     this.score = 0;
     this.level = 0;
+    this.lives = 3;
     this.enemyStepSpeed = levels[this.level].stepSpeed;
     new ButtonPress(this);
   }
@@ -75,7 +75,7 @@ export default class Game {
       const curEnemy = this.enemies[i];
       this.enemyYPos = this.enemies[i].position.y + this.enemies[i].height;
       if (this.bullet) {
-        if (detectHit(this.bullet, curEnemy)) {
+        if (detectBulletHit(this.bullet, curEnemy)) {
           curEnemy.markedForDeletion = true;
           this.bullet.hit = true;
           this.score += 20;
@@ -93,6 +93,13 @@ export default class Game {
 
     // remove bombs that are off screen
     this.bombs = this.bombs.filter(bomb => bomb.position.y < this.gameHeight);
+
+    for (let i = 0; i < this.bombs.length; i++) {
+      const curBomb = this.bombs[i];
+      if (detectBombHit(this.player, curBomb)) {
+        this.lives -= 1;
+      }
+    }
 
     // only remove enemies when they walk in order to display
     // explosion image after being hit
@@ -118,6 +125,7 @@ export default class Game {
 
     // the level is won if all of the enemies have been hit and removed
     if (this.enemies.length < 1) this.win();
+    if (this.lives === 0) this.gameState = GAMESTATE.GAMEOVER;
   }
 
   draw(ctx) {
@@ -166,6 +174,10 @@ export default class Game {
     ctx.font = '30px Arial';
     ctx.fillStyle = '#fff';
     ctx.fillText(`Score: ${this.score}`, this.gameWidth / 2, 50);
+
+    ctx.font = '20px Arial';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`Lives: ${this.lives}`, 50, 50);
   }
 
   togglePause() {
