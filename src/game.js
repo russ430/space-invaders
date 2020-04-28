@@ -5,6 +5,8 @@ import ButtonPress from './input';
 import Bullet from './bullet';
 import { detectHit } from './detectHit';
 import { buildLevel } from './buildLevel';
+import detectEdge from './detectEdge';
+import { levels } from './levels';
 
 const GAMESTATE = {
   PAUSED: 0,
@@ -23,13 +25,15 @@ export default class Game {
     this.enemies = [];
     this.player = new Player(this);
     this.enemyYPos = null;
-
+    this.timeCounter = 0;
     this.score = 0;
     this.level = 0;
+    this.enemyStepSpeed = levels[this.level].stepSpeed;
     new ButtonPress(this);
   }
 
   start() {
+    this.timeCounter = 0;
     this.enemies = buildLevel(this, this.level);
     this.gameObjects = [this.player];
     this.gameState = GAMESTATE.RUNNING;
@@ -56,48 +60,48 @@ export default class Game {
     )
       return;
 
+    this.timeCounter += 1;
+
     // updating the enemies and player
-    [...this.gameObjects, ...this.enemies].forEach(object => object.update());
+    [...this.gameObjects, ...this.enemies].forEach(object =>
+      object.update(this.timeCounter)
+    );
 
     // checking if the bullet has hit an enemy or
     // if any enemies have reached the player
     for (let i = 0; i < this.enemies.length; i++) {
       const curEnemy = this.enemies[i];
-      this.enemyYPos = this.enemies[i].position.y;
+      this.enemyYPos = this.enemies[i].position.y + this.enemies[i].height;
       if (this.bullet) {
         if (detectHit(this.bullet, curEnemy)) {
           curEnemy.markedForDeletion = true;
           this.bullet.hit = true;
           this.score += 20;
         }
-        // remove any enemies that have been hit
-        this.enemies = this.enemies.filter(
-          enemy => enemy.markedForDeletion === false
-        );
-
         // reset the bullet if it's out of the screen or if it's hit an enemy
         if (this.bullet.position.y < 0 || this.bullet.hit) this.bullet = null;
       }
     }
 
-    let edgeDetected = false;
-    for (let j = 0; j < this.enemies.length; j++) {
-      const enemy = this.enemies[j];
-      if (
-        enemy.position.x <= 0 ||
-        enemy.position.x + enemy.width >= this.gameWidth
-      ) {
-        edgeDetected = true;
-      }
+    // only remove enemies when they walk in order to display
+    // explosion image after being hit
+    if (this.timeCounter % this.enemyStepSpeed === 0) {
+      this.enemies = this.enemies.filter(
+        enemy => enemy.markedForDeletion === false
+      );
     }
 
-    if (edgeDetected) {
+    // if edge is detected shift enemies down
+    if (detectEdge(this.enemies, this.gameWidth)) {
       for (let j = 0; j < this.enemies.length; j++) {
-        this.enemies[j].shiftDown(edgeDetected);
+        this.enemies[j].shiftDown();
       }
     }
 
-    // if an enemy has reached the player: game over
+    // if the enemies reach the player -> game over
+    if (this.enemyYPos >= this.player.position.y) {
+      this.gameState = GAMESTATE.GAMEOVER;
+    }
 
     if (this.bullet) this.bullet.update();
 

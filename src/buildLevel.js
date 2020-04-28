@@ -12,12 +12,11 @@ export function buildLevel(game, level) {
   const startingYPosition = 150;
   const spacePerRow = 35;
 
-  // TODO: add type of enemy using row #
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < enemiesPerRow; j++) {
       const x = startingXPosition + spacePerEnemy * j;
       const y = startingYPosition + spacePerRow * i;
-      const enemyType = i;
+      const enemyType = i % 3;
       gameEnemies.push(new Enemy(x, y, stepSpeed, enemyType));
     }
   }

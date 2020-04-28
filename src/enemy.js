@@ -2,9 +2,9 @@ export default class Enemy {
   constructor(x, y, stepSpeed, enemyType) {
     this.imageA = document.getElementById(`enemy${enemyType}a`);
     this.imageB = document.getElementById(`enemy${enemyType}b`);
+    this.destroyed = document.getElementById('destroyed');
     this.width = 30;
     this.height = 25;
-    this.movementCounter = 0;
     this.stepSpeed = stepSpeed;
     this.direction = 1;
     this.movement = 1;
@@ -19,8 +19,17 @@ export default class Enemy {
   }
 
   draw(ctx) {
+    let image;
+    if (this.markedForDeletion) {
+      image = this.destroyed;
+    } else if (this.step < 0) {
+      image = this.imageA;
+    } else {
+      image = this.imageB;
+    }
+
     ctx.drawImage(
-      this.step < 0 ? this.imageA : this.imageB,
+      image,
       this.position.x,
       this.position.y,
       this.width,
@@ -34,12 +43,15 @@ export default class Enemy {
     this.position.x += 10 * this.direction;
   }
 
-  update() {
-    this.movementCounter += 1;
-    if (this.movementCounter === this.stepSpeed) {
-      this.position.x += 10 * this.direction;
-      this.movementCounter = 0;
-      this.step *= -1;
+  walk() {
+    this.position.x += 10 * this.direction;
+    this.movementCounter = 0;
+    this.step *= -1;
+  }
+
+  update(deltaTime) {
+    if (deltaTime % this.stepSpeed === 0) {
+      this.walk();
     }
   }
 }
