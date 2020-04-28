@@ -3,7 +3,6 @@ export default class Bullet {
     this.width = 3;
     this.height = 12;
 
-    this.speed = 0;
     this.maxSpeed = 13;
 
     this.position = {

@@ -1,5 +1,22 @@
 export default class Bomb {
-  constructor () {
+  constructor(x, y) {
+    this.width = 4;
+    this.height = 15;
 
+    this.maxSpeed = 8;
+
+    this.position = {
+      x,
+      y,
+    };
+  }
+
+  draw(ctx) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
+
+  update() {
+    this.position.y += this.maxSpeed;
   }
 }

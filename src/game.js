@@ -7,6 +7,7 @@ import { detectHit } from './detectHit';
 import { buildLevel } from './buildLevel';
 import detectEdge from './detectEdge';
 import { levels } from './levels';
+import Bomb from './bomb';
 
 const GAMESTATE = {
   PAUSED: 0,
@@ -23,9 +24,10 @@ export default class Game {
     this.gameState = GAMESTATE.MENU;
     this.gameObjects = [];
     this.enemies = [];
+    this.bombs = [];
     this.player = new Player(this);
     this.enemyYPos = null;
-    this.timeCounter = 0;
+    this.deltaTime = 0;
     this.score = 0;
     this.level = 0;
     this.enemyStepSpeed = levels[this.level].stepSpeed;
@@ -33,7 +35,7 @@ export default class Game {
   }
 
   start() {
-    this.timeCounter = 0;
+    this.deltaTime = 0;
     this.enemies = buildLevel(this, this.level);
     this.gameObjects = [this.player];
     this.gameState = GAMESTATE.RUNNING;
@@ -60,11 +62,11 @@ export default class Game {
     )
       return;
 
-    this.timeCounter += 1;
+    this.deltaTime += 1;
 
-    // updating the enemies and player
-    [...this.gameObjects, ...this.enemies].forEach(object =>
-      object.update(this.timeCounter)
+    // updating the game objects and player
+    [...this.gameObjects, ...this.enemies, ...this.bombs].forEach(object =>
+      object.update(this.deltaTime)
     );
 
     // checking if the bullet has hit an enemy or
@@ -83,9 +85,18 @@ export default class Game {
       }
     }
 
+    if (this.deltaTime % (this.enemyStepSpeed + 10) === 0) {
+      const random = Math.floor(Math.random() * this.enemies.length);
+      const { x, y } = this.enemies[random].position;
+      this.bombs.push(new Bomb(x, y));
+    }
+
+    // remove bombs that are off screen
+    this.bombs = this.bombs.filter(bomb => bomb.position.y < this.gameHeight);
+
     // only remove enemies when they walk in order to display
     // explosion image after being hit
-    if (this.timeCounter % this.enemyStepSpeed === 0) {
+    if (this.deltaTime % this.enemyStepSpeed === 0) {
       this.enemies = this.enemies.filter(
         enemy => enemy.markedForDeletion === false
       );
@@ -110,7 +121,9 @@ export default class Game {
   }
 
   draw(ctx) {
-    [...this.gameObjects, ...this.enemies].forEach(object => object.draw(ctx));
+    [...this.gameObjects, ...this.enemies, ...this.bombs].forEach(object =>
+      object.draw(ctx)
+    );
     if (this.bullet) this.bullet.draw(ctx);
 
     if (this.gameState === GAMESTATE.PAUSED) {
