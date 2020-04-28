@@ -17,7 +17,8 @@ export function buildLevel(game, level) {
     for (let j = 0; j < enemiesPerRow; j++) {
       const x = startingXPosition + spacePerEnemy * j;
       const y = startingYPosition + spacePerRow * i;
-      gameEnemies.push(new Enemy(x, y, stepSpeed));
+      const enemyType = i;
+      gameEnemies.push(new Enemy(x, y, stepSpeed, enemyType));
     }
   }
 

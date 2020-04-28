@@ -1,8 +1,8 @@
 export default class Enemy {
-  constructor(x, y, stepSpeed) {
-    this.imageA = document.getElementById('enemy1a');
-    this.imageB = document.getElementById('enemy1b');
-    this.width = 25;
+  constructor(x, y, stepSpeed, enemyType) {
+    this.imageA = document.getElementById(`enemy${enemyType}a`);
+    this.imageB = document.getElementById(`enemy${enemyType}b`);
+    this.width = 30;
     this.height = 25;
     this.movementCounter = 0;
     this.stepSpeed = stepSpeed;
