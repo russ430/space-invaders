@@ -1,4 +1,4 @@
-export const levels = [
+const levels = [
   {
     enemiesPerRow: 15,
     rows: 4,
@@ -30,9 +30,11 @@ export const levels = [
     forts: 3,
   },
   {
-    enemiesPerRow: 1,
-    rows: 1,
+    enemiesPerRow: 15,
+    rows: 5,
     stepSpeed: 30,
     forts: 2,
   },
 ];
+
+export default levels;

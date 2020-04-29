@@ -1,14 +1,17 @@
-/* eslint-disable no-plusplus */
-/* eslint-disable no-new */
+// ---------- CLASSES ---------- //
 import Player from './player';
 import ButtonPress from './input';
 import Bullet from './bullet';
+import Bomb from './bomb';
+
+// ---------- HELPER FUNCTIONS ---------- //
 import { detectBulletHit, detectBombHit, detectEdge } from './detections';
 import createEnemies from './createEnemies';
 import createForts from './createForts';
-import { levels } from './levels';
-import Bomb from './bomb';
 import displayLives from './displayLives';
+
+// ---------- VARIABLES ---------- //
+import levels from './levels';
 
 const GAMESTATE = {
   PAUSED: 0,
@@ -41,6 +44,8 @@ export default class Game {
   start() {
     if (this.level === levels.length) {
       this.gameState = GAMESTATE.BEATGAME;
+    } else if (this.gameState !== GAMESTATE.MENU) {
+      return;
     } else {
       this.lives = 3;
       this.deltaTime = 0;
@@ -52,6 +57,7 @@ export default class Game {
   }
 
   shoot() {
+    // if a bullet already exists do not create another
     if (this.bullet) return;
     this.bullet = new Bullet(this);
   }
@@ -86,7 +92,7 @@ export default class Game {
   }
 
   updateBombs() {
-    // drop bombs
+    // drop bomb from random enemy
     if (this.deltaTime % (this.enemyStepSpeed + 10) === 0) {
       const random = Math.floor(Math.random() * this.enemies.length);
       const { x, y } = this.enemies[random].position;
@@ -126,7 +132,7 @@ export default class Game {
   }
 
   checkBulletHits() {
-    // checking to see if the bullet has hit a fort
+    // check to see if the bullet has hit a fort
     for (let i = 0; i < this.forts.length; i++) {
       const curFort = this.forts[i];
       if (this.bullet) {
@@ -136,9 +142,10 @@ export default class Game {
       }
     }
 
-    // checking if the bullet has hit an enemy
+    // check if the bullet has hit an enemy
     for (let i = 0; i < this.enemies.length; i++) {
       const curEnemy = this.enemies[i];
+      // store the last enemy's y position to use elsewhere
       this.enemyYPos = this.enemies[i].position.y + this.enemies[i].height;
       if (this.bullet) {
         if (detectBulletHit(this.bullet, curEnemy)) {
@@ -152,6 +159,14 @@ export default class Game {
     }
   }
 
+  togglePause() {
+    if (this.gameState === GAMESTATE.PAUSED) {
+      this.gameState = GAMESTATE.RUNNING;
+    } else {
+      this.gameState = GAMESTATE.PAUSED;
+    }
+  }
+
   update() {
     // no updates to the game should occur if the game state is
     // paused, at the menu, or the game is over
@@ -162,6 +177,7 @@ export default class Game {
       this.gameState === GAMESTATE.BEATGAME
     )
       return;
+
     // updating the game objects and player
     [...this.gameObjects, ...this.enemies, ...this.bombs].forEach(object =>
       object.update(this.deltaTime)
@@ -282,13 +298,5 @@ export default class Game {
     ctx.fillText(`Score: ${this.score}`, this.gameWidth / 2, 50);
 
     displayLives(ctx, this.lives);
-  }
-
-  togglePause() {
-    if (this.gameState === GAMESTATE.PAUSED) {
-      this.gameState = GAMESTATE.RUNNING;
-    } else {
-      this.gameState = GAMESTATE.PAUSED;
-    }
   }
 }
