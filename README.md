@@ -1,15 +1,17 @@
-# Babel Webpack Starter
+# Space Invaders
 
-A starter pack to build JavaScript applications using standards from ES2015, ES2016 & ES2017. It uses webpack, Babel and webpack-dev-server to compile and serve. It is fully compatible with Async/Await as it uses the Babel polyfill.
+I wanted to try my hand at coding up a computer game and decided to recreate the classic Space Invaders game. I developed the game itself entirely with vanilla JavaScript and the HTML canvas. It has 5 levels that progress in difficulty as each level is passed.
 
-### Version
-1.1.0
+## Live Demo
+
+[Space Invaders] ** need link
 
 ## Usage
+Feel free to clone the repository if you'd like, follow the steps below to get it up and running on your machine.
 
 ### Installation
 
-Install the dependencies
+After downloading or cloning the repository install the dependencies.
 
 ```sh
 $ npm install
@@ -33,9 +35,9 @@ $ npm run build
 
 ### Author
 
-Brad Traversy
-[Traversy Media](http://www.traversymedia.com)
+[Alex Russian](https://alexrussian.com)
 
 ### License
 
 This project is licensed under the MIT License
+
