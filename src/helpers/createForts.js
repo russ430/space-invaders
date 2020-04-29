@@ -1,4 +1,4 @@
-import Fort from './fort';
+import Fort from '../classes/fort';
 
 export default function createForts(game, { forts }) {
   const gameForts = [];

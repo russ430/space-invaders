@@ -1,17 +1,22 @@
+/* eslint-disable no-useless-return */
 // ---------- CLASSES ---------- //
 import Player from './player';
-import ButtonPress from './input';
+import ButtonPress from '../controller/input';
 import Bullet from './bullet';
 import Bomb from './bomb';
 
 // ---------- HELPER FUNCTIONS ---------- //
-import { detectBulletHit, detectBombHit, detectEdge } from './detections';
-import createEnemies from './createEnemies';
-import createForts from './createForts';
-import displayLives from './displayLives';
+import {
+  detectBulletHit,
+  detectBombHit,
+  detectEdge,
+} from '../helpers/detections';
+import createEnemies from '../helpers/createEnemies';
+import createForts from '../helpers/createForts';
+import displayLives from '../helpers/displayLives';
 
 // ---------- VARIABLES ---------- //
-import levels from './levels';
+import levels from '../levels/levels';
 
 const GAMESTATE = {
   PAUSED: 0,

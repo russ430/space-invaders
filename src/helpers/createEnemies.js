@@ -1,5 +1,5 @@
 /* eslint-disable no-plusplus */
-import Enemy from './enemy';
+import Enemy from '../classes/enemy';
 
 export default function createEnemies(
   game,
