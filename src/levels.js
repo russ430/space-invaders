@@ -30,8 +30,8 @@ export const levels = [
     forts: 3,
   },
   {
-    enemiesPerRow: 15,
-    rows: 5,
+    enemiesPerRow: 1,
+    rows: 1,
     stepSpeed: 30,
     forts: 2,
   },
