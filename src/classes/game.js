@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-return */
 // ---------- CLASSES ---------- //
 import Player from './player';
 import ButtonPress from '../controller/input';
