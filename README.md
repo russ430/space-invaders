@@ -4,7 +4,7 @@ I wanted to try my hand at coding up a computer game and decided to recreate the
 
 ## Live Demo
 
-[Space Invaders] ** need link
+[Space Invaders](https://classicspaceinvaders.netlify.app)
 
 ## Usage
 Feel free to clone the repository if you'd like, follow the steps below to get it up and running on your machine.
