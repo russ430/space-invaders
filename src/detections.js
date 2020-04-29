@@ -10,11 +10,11 @@ export function detectBulletHit(bullet, enemy) {
   }
 }
 
-export function detectBombHit(player, bomb) {
+export function detectBombHit(object, bomb) {
   if (
-    bomb.position.y >= player.position.y &&
-    bomb.position.x >= player.position.x &&
-    bomb.position.x <= player.position.x + player.width
+    bomb.position.y >= object.position.y &&
+    bomb.position.x >= object.position.x &&
+    bomb.position.x <= object.position.x + object.width
   ) {
     return true;
   }

@@ -1,11 +1,12 @@
 /* eslint-disable no-plusplus */
 import Enemy from './enemy';
-import { levels } from './levels';
 
-export function buildLevel(game, level) {
+export default function createEnemies(
+  game,
+  { enemiesPerRow, rows, stepSpeed }
+) {
   const gameEnemies = [];
 
-  const { enemiesPerRow, rows, stepSpeed } = levels[level];
   const spacePerEnemy = 35;
   const startingXPosition =
     (game.gameWidth - enemiesPerRow * spacePerEnemy) / 2;

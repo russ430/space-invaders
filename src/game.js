@@ -4,7 +4,8 @@ import Player from './player';
 import ButtonPress from './input';
 import Bullet from './bullet';
 import { detectBulletHit, detectBombHit, detectEdge } from './detections';
-import { buildLevel } from './buildLevel';
+import createEnemies from './createEnemies';
+import createForts from './createForts';
 import { levels } from './levels';
 import Bomb from './bomb';
 
@@ -24,6 +25,7 @@ export default class Game {
     this.gameObjects = [];
     this.enemies = [];
     this.bombs = [];
+    this.forts = [];
     this.player = new Player(this);
     this.enemyYPos = null;
     this.deltaTime = 0;
@@ -37,7 +39,8 @@ export default class Game {
   start() {
     this.lives = 3;
     this.deltaTime = 0;
-    this.enemies = buildLevel(this, this.level);
+    this.enemies = createEnemies(this, levels[this.level]);
+    this.forts = createForts(this, levels[this.level]);
     this.gameObjects = [this.player];
     this.gameState = GAMESTATE.RUNNING;
   }
@@ -95,11 +98,22 @@ export default class Game {
     // remove bombs that are off screen
     this.bombs = this.bombs.filter(bomb => bomb.position.y < this.gameHeight);
 
+    // check if a bomb has hit the player's ship
     for (let i = 0; i < this.bombs.length; i++) {
       const curBomb = this.bombs[i];
       if (detectBombHit(this.player, curBomb)) {
         this.bombs.splice(i, 1);
         this.lives -= 1;
+      }
+    }
+
+    // check if a bomb hits a fort and delete it
+    for (let i = 0; i < this.bombs.length; i++) {
+      const curBomb = this.bombs[i];
+      for (let j = 0; j < this.forts.length; j++) {
+        if (detectBombHit(this.forts[j], curBomb)) {
+          this.bombs.splice(i, 1);
+        }
       }
     }
 
@@ -131,9 +145,12 @@ export default class Game {
   }
 
   draw(ctx) {
-    [...this.gameObjects, ...this.enemies, ...this.bombs].forEach(object =>
-      object.draw(ctx)
-    );
+    [
+      ...this.gameObjects,
+      ...this.enemies,
+      ...this.bombs,
+      ...this.forts,
+    ].forEach(object => object.draw(ctx));
     if (this.bullet) this.bullet.draw(ctx);
 
     if (this.gameState === GAMESTATE.PAUSED) {
