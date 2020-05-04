@@ -1,6 +1,5 @@
 // ---------- CLASSES ---------- //
 import Player from './player';
-import ButtonPress from '../controller/input';
 import Bullet from './bullet';
 import Bomb from './bomb';
 
@@ -13,21 +12,22 @@ import {
 import createEnemies from '../helpers/createEnemies';
 import createForts from '../helpers/createForts';
 import displayLives from '../helpers/displayLives';
+import setupKeyboardPress from '../controller/input';
 
 // ---------- VARIABLES ---------- //
 import levels from '../levels/levels';
 
 const GAMESTATE = {
-  PAUSED: 0,
-  RUNNING: 1,
-  MENU: 2,
-  GAMEOVER: 3,
-  NEWLEVEL: 4,
-  BEATGAME: 5,
+  PAUSED: Symbol('paused'),
+  RUNNING: Symbol('running'),
+  MENU: Symbol('menu'),
+  GAMEOVER: Symbol('game over'),
+  NEWLEVEL: Symbol('new level'),
+  BEATGAME: Symbol('beat game'),
 };
 
 export default class Game {
-  constructor(gameWidth, gameHeight) {
+  constructor(gameWidth, gameHeight, deltaTime) {
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.gameState = GAMESTATE.MENU;
@@ -37,12 +37,14 @@ export default class Game {
     this.forts = [];
     this.player = new Player(this);
     this.enemyYPos = null;
-    this.deltaTime = 0;
+    this.enemyStepCounter = 0;
+    this.deltaTime = deltaTime;
     this.score = 0;
     this.level = 0;
     this.lives = 3;
     this.enemyStepSpeed = levels[this.level].stepSpeed;
-    new ButtonPress(this);
+
+    setupKeyboardPress(this);
   }
 
   start() {
@@ -52,7 +54,6 @@ export default class Game {
       return;
     } else {
       this.lives = 3;
-      this.deltaTime = 0;
       this.enemies = createEnemies(this, levels[this.level]);
       this.forts = createForts(this, levels[this.level]);
       this.gameObjects = [this.player];
@@ -63,7 +64,11 @@ export default class Game {
   shoot() {
     // if a bullet already exists do not create another
     if (this.bullet) return;
-    this.bullet = new Bullet(this);
+    this.bullet = new Bullet(
+      this.player.position.x,
+      this.player.position.y,
+      this.player.width
+    );
   }
 
   beatLevel() {
@@ -96,8 +101,8 @@ export default class Game {
   }
 
   updateBombs() {
-    // drop bomb from random enemy
-    if (this.deltaTime % (this.enemyStepSpeed + 10) === 0) {
+    // drop bomb from random enemy every step
+    if (this.enemyStepCounter % this.enemyStepSpeed === 0) {
       const random = Math.floor(Math.random() * this.enemies.length);
       const { x, y } = this.enemies[random].position;
       const middleOfEnemy = x + 15;
@@ -113,12 +118,14 @@ export default class Game {
       for (let j = 0; j < this.forts.length; j++) {
         if (detectBombHit(this.forts[j], curBomb)) {
           this.bombs.splice(i, 1);
+          break;
         }
       }
     }
   }
 
   updateEnemies() {
+    this.enemyStepCounter += 1;
     // if edge is detected shift enemies down
     if (detectEdge(this.enemies, this.gameWidth)) {
       for (let j = 0; j < this.enemies.length; j++) {
@@ -126,13 +133,10 @@ export default class Game {
       }
     }
 
-    // only remove enemies when they walk in order to display
-    // explosion image after being hit
-    if (this.deltaTime % this.enemyStepSpeed === 0) {
-      this.enemies = this.enemies.filter(
-        enemy => enemy.markedForDeletion === false
-      );
-    }
+    // remove shot enemies from game
+    this.enemies = this.enemies.filter(
+      enemy => enemy.readyForDeletion === false
+    );
   }
 
   checkBulletHits() {
@@ -164,6 +168,11 @@ export default class Game {
   }
 
   togglePause() {
+    if (
+      this.gameState === GAMESTATE.GAMEOVER ||
+      this.gameState === GAMESTATE.BEATGAME
+    )
+      return;
     if (this.gameState === GAMESTATE.PAUSED) {
       this.gameState = GAMESTATE.RUNNING;
     } else {
@@ -183,9 +192,11 @@ export default class Game {
       return;
 
     // updating the game objects and player
-    [...this.gameObjects, ...this.enemies, ...this.bombs].forEach(object =>
+    [...this.gameObjects, ...this.bombs].forEach(object =>
       object.update(this.deltaTime)
     );
+
+    this.enemies.forEach(enemy => enemy.update(this.enemyStepCounter));
 
     this.checkGameStatus();
     this.checkBulletHits();
@@ -195,8 +206,6 @@ export default class Game {
 
     // updating the bullet if it exists
     if (this.bullet) this.bullet.update();
-
-    this.deltaTime += 1;
   }
 
   draw(ctx) {

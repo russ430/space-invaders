@@ -1,13 +1,13 @@
 export default class Bullet {
-  constructor(game) {
+  constructor(playerX, playerY, playerWidth) {
     this.width = 3;
     this.height = 12;
 
     this.maxSpeed = 13;
 
     this.position = {
-      x: game.player.position.x + game.player.width / 2,
-      y: game.player.position.y,
+      x: playerX + playerWidth / 2,
+      y: playerY,
     };
 
     this.hit = false;

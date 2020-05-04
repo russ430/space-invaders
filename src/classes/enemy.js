@@ -15,6 +15,7 @@ export default class Enemy {
       y,
     };
 
+    this.readyForDeletion = false;
     this.markedForDeletion = false;
   }
 
@@ -47,10 +48,14 @@ export default class Enemy {
     this.position.x += 10 * this.direction;
     this.movementCounter = 0;
     this.step *= -1;
+
+    if (this.markedForDeletion) {
+      this.readyForDeletion = true;
+    }
   }
 
-  update(deltaTime) {
-    if (deltaTime % this.stepSpeed === 0) {
+  update(stepCounter) {
+    if (stepCounter % this.stepSpeed === 0) {
       this.walk();
     }
   }
