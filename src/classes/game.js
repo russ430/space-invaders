@@ -50,7 +50,10 @@ export default class Game {
   start() {
     if (this.level === levels.length) {
       this.gameState = GAMESTATE.BEATGAME;
-    } else if (this.gameState !== GAMESTATE.MENU) {
+    } else if (
+      this.gameState !== GAMESTATE.MENU &&
+      this.gameState !== GAMESTATE.NEWLEVEL
+    ) {
       return;
     } else {
       this.lives = 3;
@@ -102,7 +105,7 @@ export default class Game {
 
   updateBombs() {
     // drop bomb from random enemy every step
-    if (this.enemyStepCounter % this.enemyStepSpeed === 0) {
+    if (this.enemyStepCounter % (this.enemyStepSpeed + 10) === 0) {
       const random = Math.floor(Math.random() * this.enemies.length);
       const { x, y } = this.enemies[random].position;
       const middleOfEnemy = x + 15;
@@ -187,7 +190,8 @@ export default class Game {
       this.gameState === GAMESTATE.PAUSED ||
       this.gameState === GAMESTATE.MENU ||
       this.gameState === GAMESTATE.GAMEOVER ||
-      this.gameState === GAMESTATE.BEATGAME
+      this.gameState === GAMESTATE.BEATGAME ||
+      this.gameState === GAMESTATE.NEWLEVEL
     )
       return;
 
