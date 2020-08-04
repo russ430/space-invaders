@@ -57,7 +57,7 @@ export default class Game {
       return;
     } else {
       this.lives = 3;
-      this.enemies = createEnemies(this, levels[this.level]);
+      this.enemies = createEnemies(this.gameWidth, levels[this.level]);
       this.forts = createForts(this, levels[this.level]);
       this.gameObjects = [this.player];
       this.gameState = GAMESTATE.RUNNING;

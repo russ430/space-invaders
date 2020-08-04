@@ -2,14 +2,13 @@
 import Enemy from '../classes/enemy';
 
 export default function createEnemies(
-  game,
+  width,
   { enemiesPerRow, rows, stepSpeed }
 ) {
   const gameEnemies = [];
 
   const spacePerEnemy = 35;
-  const startingXPosition =
-    (game.gameWidth - enemiesPerRow * spacePerEnemy) / 2;
+  const startingXPosition = (width - enemiesPerRow * spacePerEnemy) / 2;
   const startingYPosition = 150;
   const spacePerRow = 35;
 
