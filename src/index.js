@@ -39,10 +39,11 @@ function gameLoop(timestamp) {
     game.update(timeStep);
     deltaTime -= timeStep;
     numUpdateSteps += 1;
-    // a check to mainly see if the user has navigated away from the
+    // a check done mainly to see if the user has navigated away from the
     // tab the game is running on, if it has the game will reset delta
     // after a specified time period (using numUpdateSteps) so as to not
-    // create a 'spiral of death' that would make game hang
+    // create a 'spiral of death' that would make game hang or jump too far
+    // forward in time
     if (numUpdateSteps >= 240) {
       deltaTime = 0;
       break;

@@ -1,5 +1,3 @@
-/* eslint-disable no-plusplus */
-
 export function detectBulletHit(bullet, enemy) {
   if (
     enemy.position.y + enemy.height >= bullet.position.y &&
@@ -8,6 +6,7 @@ export function detectBulletHit(bullet, enemy) {
   ) {
     return true;
   }
+  return false;
 }
 
 export function detectBombHit(object, bomb) {
@@ -18,6 +17,7 @@ export function detectBombHit(object, bomb) {
   ) {
     return true;
   }
+  return false;
 }
 
 export function detectEdge(enemies, width) {
@@ -27,4 +27,5 @@ export function detectEdge(enemies, width) {
       return true;
     }
   }
+  return false;
 }

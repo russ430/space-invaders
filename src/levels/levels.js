@@ -1,7 +1,7 @@
 const levels = [
   {
-    enemiesPerRow: 1,
-    rows: 1,
+    enemiesPerRow: 15,
+    rows: 4,
     stepSpeed: 30,
     forts: 4,
   },
