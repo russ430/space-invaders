@@ -3,7 +3,7 @@ export default class Bomb {
     this.width = 4;
     this.height = 15;
 
-    this.maxSpeed = 8;
+    this.maxSpeed = 320;
 
     this.position = {
       x,
@@ -18,7 +18,7 @@ export default class Bomb {
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
-  update() {
-    this.position.y += this.maxSpeed;
+  update(secondsPassed) {
+    this.position.y += this.maxSpeed * secondsPassed;
   }
 }

@@ -7,7 +7,7 @@ export default class Player {
     this.gameWidth = game.gameWidth;
     this.gameHeight = game.gameHeight;
 
-    this.maxSpeed = 5;
+    this.maxSpeed = 170;
     this.speed = 0;
 
     this.position = {
@@ -38,9 +38,10 @@ export default class Player {
     );
   }
 
-  update() {
-    this.position.x += this.speed;
+  update(secondsPassed) {
+    this.position.x += this.speed * secondsPassed;
 
+    // stop player when edge of game is reached
     if (this.position.x < 0) this.position.x = 0;
     if (this.position.x > this.gameWidth - this.width)
       this.position.x = this.gameWidth - this.width;

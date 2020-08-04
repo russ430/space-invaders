@@ -9,6 +9,7 @@ export default class Enemy {
     this.direction = 1;
     this.movement = 1;
     this.step = 1;
+    this.deltaTime = 999999;
 
     this.position = {
       x,
@@ -54,9 +55,11 @@ export default class Enemy {
     }
   }
 
-  update(stepCounter) {
-    if (stepCounter % this.stepSpeed === 0) {
+  update(secondsPassed) {
+    this.deltaTime += secondsPassed;
+    if (this.deltaTime > secondsPassed * this.stepSpeed) {
       this.walk();
+      this.deltaTime = 0;
     }
   }
 }

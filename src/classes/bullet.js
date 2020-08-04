@@ -3,7 +3,7 @@ export default class Bullet {
     this.width = 3;
     this.height = 12;
 
-    this.maxSpeed = 13;
+    this.maxSpeed = 750;
 
     this.position = {
       x: playerX + playerWidth / 2,
@@ -18,7 +18,7 @@ export default class Bullet {
     ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
-  update() {
-    this.position.y += -this.maxSpeed;
+  update(secondsPassed) {
+    this.position.y += -this.maxSpeed * secondsPassed;
   }
 }

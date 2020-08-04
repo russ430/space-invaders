@@ -27,7 +27,7 @@ const GAMESTATE = {
 };
 
 export default class Game {
-  constructor(gameWidth, gameHeight, deltaTime) {
+  constructor(gameWidth, gameHeight) {
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.gameState = GAMESTATE.MENU;
@@ -37,11 +37,10 @@ export default class Game {
     this.forts = [];
     this.player = new Player(this);
     this.enemyYPos = null;
-    this.enemyStepCounter = 0;
-    this.deltaTime = deltaTime;
     this.score = 0;
     this.level = 0;
     this.lives = 3;
+    this.enemyStepDelay = 99999;
     this.enemyStepSpeed = levels[this.level].stepSpeed;
 
     setupKeyboardPress(this);
@@ -103,13 +102,15 @@ export default class Game {
     if (this.enemies.length < 1) this.beatLevel();
   }
 
-  updateBombs() {
+  updateBombs(secondsPassed) {
+    this.enemyStepDelay += secondsPassed;
     // drop bomb from random enemy every step
-    if (this.enemyStepCounter % (this.enemyStepSpeed + 10) === 0) {
+    if (this.enemyStepDelay > this.enemyStepSpeed * secondsPassed) {
       const random = Math.floor(Math.random() * this.enemies.length);
       const { x, y } = this.enemies[random].position;
       const middleOfEnemy = x + 15;
       this.bombs.push(new Bomb(middleOfEnemy, y));
+      this.enemyStepDelay = 0;
     }
 
     // remove bombs that are off screen
@@ -127,8 +128,8 @@ export default class Game {
     }
   }
 
-  updateEnemies() {
-    this.enemyStepCounter += 1;
+  updateEnemies(secondsPassed) {
+    this.enemies.forEach(enemy => enemy.update(secondsPassed));
     // if edge is detected shift enemies down
     if (detectEdge(this.enemies, this.gameWidth)) {
       for (let j = 0; j < this.enemies.length; j++) {
@@ -183,7 +184,7 @@ export default class Game {
     }
   }
 
-  update() {
+  update(secondsPassed) {
     // no updates to the game should occur if the game state is
     // paused, at the menu, or the game is over
     if (
@@ -197,19 +198,17 @@ export default class Game {
 
     // updating the game objects and player
     [...this.gameObjects, ...this.bombs].forEach(object =>
-      object.update(this.deltaTime)
+      object.update(secondsPassed)
     );
-
-    this.enemies.forEach(enemy => enemy.update(this.enemyStepCounter));
 
     this.checkGameStatus();
     this.checkBulletHits();
     this.checkBombHit();
-    this.updateEnemies();
-    this.updateBombs();
+    this.updateEnemies(secondsPassed);
+    this.updateBombs(secondsPassed);
 
     // updating the bullet if it exists
-    if (this.bullet) this.bullet.update();
+    if (this.bullet) this.bullet.update(secondsPassed);
   }
 
   draw(ctx) {
